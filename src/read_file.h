@@ -5,8 +5,13 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include "instr.h"
 
-struct instr_t *read_file(char *fname);
+struct fline_t {
+	int len;
+	char **words;
+};
+extern const struct fline_t END_LINE;
+
+struct fline_t *read_file(char *fname);
 
 #endif /* __READFILE_H__ */

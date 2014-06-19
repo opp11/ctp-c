@@ -4,16 +4,15 @@
 
 int main(int argc, char **argv)
 {
-	struct instr_t *ins = read_file("doc/test");
-	while ((*ins).code != CODE_END){
+	struct fline_t *lines = read_file("doc/test");
+	while ((*lines).len != -1){
 		int i = 0;
-		printf("%i: ", (*ins).code);
-		while (i < (*ins).argc){
-			printf("%s ", (*ins).argv[i]);
+		while (i < (*lines).len){
+			printf("%s | ", (*lines).words[i]);
 			i++;
 		}
 		printf("\n");
-		ins++;
+		lines++;
 	}
 	return 0;
 }
