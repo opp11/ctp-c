@@ -12,6 +12,6 @@ struct fline_t {
 };
 extern const struct fline_t END_LINE;
 
-struct fline_t *read_file(char *fname);
+struct fline_t *read_file(char *fname, size_t *len);
 
 #endif /* __READFILE_H__ */

@@ -35,22 +35,20 @@ static inline int is_pin(int pin)
 static int met_vin;
 static int met_gnd;
 
-struct instr_t *parse_file(struct fline_t *lines)
+struct instr_t *parse_file(struct fline_t *lines, size_t *len)
 {
-	struct instr_t *out = malloc(sizeof(struct instr_t));
-	size_t out_len = 1;
+	size_t out_len = len ? (*len) + 2 : 2;
+	struct instr_t *out = malloc(sizeof(struct instr_t) * out_len);
+	int i;
+
 	met_vin = 0;
 	met_gnd = 0;
 	out[0] = HEADER_INSTR;
 
-	while (lines->len != -1){
-		out_len++;
-		out = realloc(out, sizeof(struct instr_t) * out_len);
-		out[out_len - 1] = parse_instr(*lines);
-		lines++;
+	for (i = 1; i < out_len - 1; i++){
+		out[i] = parse_instr(lines[i]);
 	}
-	out = realloc(out, sizeof(struct instr_t) * (out_len + 1));
-	out[out_len] = END_INSTR;
+	out[out_len - 1] = END_INSTR;
 
 	return out;
 }

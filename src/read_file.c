@@ -14,7 +14,7 @@ static int is_code_line(char *line);
 /* Convert a null-terminated string to lowercase */
 static void str_to_lower(char* str);
 
-struct fline_t *read_file(char *fname)
+struct fline_t *read_file(char *fname, size_t *len)
 {
 	struct fline_t *out = NULL;
 	size_t out_len = 0;
@@ -34,11 +34,10 @@ struct fline_t *read_file(char *fname)
 		}
 	}
 	free(line);
-	/* Add final element so we know when we hit the end */
-	out_len++;
-	out = realloc(out, sizeof(struct fline_t) * out_len);
-	out[out_len - 1] = END_LINE;
 
+	if (len){
+		(*len) = out_len;
+	}
 	fclose(file);
 	return out;
 }
