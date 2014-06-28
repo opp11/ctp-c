@@ -49,7 +49,9 @@ struct instr_t *parse_file(struct fline_t *lines, size_t *len)
 		out[i] = parse_instr(lines[i]);
 	}
 	out[out_len - 1] = END_INSTR;
-
+	if (len){
+		(*len) = out_len;
+	}
 	return out;
 }
 
