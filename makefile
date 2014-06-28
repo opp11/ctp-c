@@ -11,9 +11,9 @@ LC_FLAGS=-I$(SRC_DIR) -Wall -Wextra
 SRCS=$(wildcard $(SRC_DIR)/*.c)
 OBJS=$(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:.c=.o)))
 
-all: ctp
+all: $(OUTNAME)
 
-ctp: $(OBJS)
+$(OUTNAME): $(OBJS)
 	$(CC) $(LC_FLAGS) -o $(OUT_DIR)/$(OUTNAME) $(OBJS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
