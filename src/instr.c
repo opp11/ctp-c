@@ -10,8 +10,8 @@ const char *NAME_VIN = "vin";
 const char *NAME_GND = "gnd";
 const char *NAME_DELAY = "delay";
 
-const struct instr_t HEADER_INSTR = {'P', ('M'<<8) | '1'};
-const struct instr_t END_INSTR = {CODE_END, ('N'<<8) | 'D'};
+const struct instr_t HEADER_INSTR = {'P', 'M' | ('1'<<8)};
+const struct instr_t END_INSTR = {CODE_END, 'N' | ('D'<<8)};
 
 int instr_name_to_code(char* name)
 {
