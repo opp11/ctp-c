@@ -12,3 +12,8 @@ gnd 8
 set on rest
 check on 1 2 off rest
 delay 133
+
+#case
+DELAY 20
+dELaY 20
+SET OFF REST

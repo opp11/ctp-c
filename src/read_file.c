@@ -11,6 +11,9 @@ static struct fline_t split_line(char *line);
 /* Checks whether a line is considered a code line or a skippable */
 static int is_code_line(char *line);
 
+/* Convert a null-terminated string to lowercase */
+static void str_to_lower(char* str);
+
 struct fline_t *read_file(char *fname)
 {
 	struct fline_t *out = NULL;
@@ -25,6 +28,7 @@ struct fline_t *read_file(char *fname)
 	while (getline(&line, &line_len, file) != -1){
 		if (is_code_line(line)){
 			out_len++;
+			str_to_lower(line);
 			out = realloc(out, sizeof(struct fline_t) * out_len);
 			out[out_len - 1] = split_line(line);
 		}
@@ -68,4 +72,12 @@ static int is_code_line(char *line)
 		line++;
 	}
 	return 0;
+}
+
+static void str_to_lower(char* str)
+{
+	while (*str){
+		(*str) = tolower(*str);
+		str++;
+	}
 }
