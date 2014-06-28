@@ -1,12 +1,17 @@
 #include "instr.h"
 
+const char *KW_OFF = "off";
+const char *KW_ON = "on";
+const char *KW_REST = "rest";
+
 const char *NAME_CHECK = "check";
 const char *NAME_SET = "set";
 const char *NAME_VIN = "vin";
 const char *NAME_GND = "gnd";
 const char *NAME_DELAY = "delay";
 
-const struct instr_t END_INSTR = {CODE_END, NULL, 0};
+const struct instr_t HEADER_INSTR = {'P', ('M'<<8) | '1'};
+const struct instr_t END_INSTR = {CODE_END, ('N'<<8) | 'D'};
 
 int instr_name_to_code(char* name)
 {
