@@ -4,7 +4,7 @@ static int write_instruction(struct instr_t in, FILE *file);
 
 int build_file(const char *fname, struct instr_t *ints, size_t len)
 {
-	int i;
+	unsigned int i;
 	FILE *file = fopen(fname, "wb+");
 	if (!file){
 		return -1;

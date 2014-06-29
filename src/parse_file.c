@@ -47,7 +47,7 @@ struct instr_t *parse_file(struct fline_t *lines, size_t *len)
 {
 	size_t out_len = (*len) + 2;
 	struct instr_t *out = malloc(sizeof(struct instr_t) * out_len);
-	int i;
+	unsigned int i;
 
 	met_vin = 0;
 	met_gnd = 0;
