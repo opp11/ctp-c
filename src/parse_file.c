@@ -37,7 +37,7 @@ static int met_gnd;
 
 struct instr_t *parse_file(struct fline_t *lines, size_t *len)
 {
-	size_t out_len = len ? (*len) + 2 : 2;
+	size_t out_len = (*len) + 2;
 	struct instr_t *out = malloc(sizeof(struct instr_t) * out_len);
 	int i;
 
