@@ -1,4 +1,3 @@
-Fix bug where first line is skipped when compiling
 Make error message system
 	and warning system
 Maybe add some unicode support
