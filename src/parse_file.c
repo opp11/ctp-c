@@ -12,11 +12,19 @@ static uint16_t parse_check_args(struct fline_t line);
 static uint16_t parse_set_args(struct fline_t line);
 static uint16_t parse_delay_args(struct fline_t line);
 
+/* Parses the arguments for pin i/o, e.g. SET or CHECK. */
 static uint16_t parse_pin_io(struct fline_t line, uint16_t pins, int *met_pins);
+
+/* Parses the arguments for power config, e.g. GND or VIN. */
 static uint16_t parse_power_config(struct fline_t line, int (*pred)(int pin));
 
+/* Sets all pins in 'pins' which have not been met yet to 'val'. */
 static int handle_rest(uint16_t *pins, int val, int *met_pins);
+
+/* Sets a correspondig bit in 'pins' to 'val'. Also updates 'met_pins'. */
 static int set_single_pin(uint16_t *pins, int pin, int val, int *met_pins);
+
+/* Returns 'arg' converted to pin number, or -1 on failure to do so. */
 static int arg_to_num(const char* arg);
 
 static inline int is_vin_pin(int pin)
@@ -93,6 +101,7 @@ static uint16_t parse_check_args(struct fline_t line)
 {
 	int met_pins[NUM_PINS] = {0};
 	uint16_t out = parse_pin_io(line, 0, met_pins);
+	/* Check that all pins were given a value */
 	int i;
 	for (i = 0; i < NUM_PINS; i++){
 		if (!met_pins[i]){
