@@ -1,7 +1,5 @@
 #include "read_file.h"
 
-const struct fline_t END_LINE = {-1, NULL};
-
 static const char COMMENT_CHAR = '#';
 static const char *INSTR_SEPS = " \n";
 

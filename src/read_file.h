@@ -10,7 +10,6 @@ struct fline_t {
 	int len;
 	char **words;
 };
-extern const struct fline_t END_LINE;
 
 struct fline_t *read_file(char *fname, size_t *len);
 
