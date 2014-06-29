@@ -7,7 +7,7 @@
 int main(int argc, char **argv)
 {
 	size_t len;
-	struct fline_t *lines = read_file("doc/test", &len);
+	struct fline_t *lines = read_file(argv[1], &len);
 	struct instr_t *ints = parse_file(lines, &len);
 	build_file("a.prt", ints, len);
 	return 0;
