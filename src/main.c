@@ -5,8 +5,6 @@
 #include "build_file.h"
 #include "err_handling.h"
 
-static const char *strip_path(const char* str);
-
 int main(int argc, char **argv)
 {
 	size_t len;
@@ -18,10 +16,4 @@ int main(int argc, char **argv)
 	}
 	pop_location();
 	return 0;
-}
-
-static const char *strip_path(const char* str)
-{
-	char *out = strrchr(str, '/');
-	return out ? ++out : str;
 }
