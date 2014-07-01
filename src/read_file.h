@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include "err_handling.h"
+
+#define MAX_LINE_DIGITS 512
 
 /*
  * Structure for containing the words in a line.

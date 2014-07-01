@@ -6,6 +6,7 @@
 #include <string.h>
 #include "instr.h"
 #include "read_file.h"
+#include "err_handling.h"
 
 /*
  * Parses the instructions in 'lines', converts them to their binary

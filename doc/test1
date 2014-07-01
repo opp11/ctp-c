@@ -17,3 +17,10 @@ delay 133
 DELAY 20
 dELaY 20
 SET OFF REST
+
+#invalids
+check off 1 2 on 3
+check on 1
+set on 1 off 19
+delay 999999999
+delay 100 10

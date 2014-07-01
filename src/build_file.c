@@ -7,6 +7,7 @@ int build_file(const char *fname, struct instr_t *ints, size_t len)
 	unsigned int i;
 	FILE *file = fopen(fname, "wb+");
 	if (!file){
+		report_fatal("could not create file '%s'", fname);
 		return -1;
 	}
 

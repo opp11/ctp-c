@@ -10,6 +10,8 @@ static struct instr_t parse_instr(struct fline_t line);
 
 static uint16_t parse_check_args(struct fline_t line);
 static uint16_t parse_set_args(struct fline_t line);
+static uint16_t parse_vin_args(struct fline_t line);
+static uint16_t parse_gnd_args(struct fline_t line);
 static uint16_t parse_delay_args(struct fline_t line);
 
 /* Parses the arguments for pin i/o, e.g. SET or CHECK. */
@@ -48,13 +50,20 @@ struct instr_t *parse_file(struct fline_t *lines, size_t *len)
 	size_t out_len = (*len) + 2;
 	struct instr_t *out = malloc(sizeof(struct instr_t) * out_len);
 	unsigned int i;
+	char crnt_line[MAX_LINE_DIGITS]; /* Should be enough digits... */
 
 	met_vin = 0;
 	met_gnd = 0;
 	out[0] = HEADER_INSTR;
 
 	for (i = 1; i < out_len - 1; i++){
+		if (snprintf(crnt_line, MAX_LINE_DIGITS, "%i", i) >= 
+				MAX_LINE_DIGITS){
+			report_fatal("too many lines");
+		}
+		push_location(crnt_line);
 		out[i] = parse_instr(lines[i - 1]);
+		pop_location();
 	}
 	out[out_len - 1] = END_INSTR;
 	if (len){
@@ -67,7 +76,7 @@ static struct instr_t parse_instr(struct fline_t line)
 {
 	struct instr_t out = {0, 0};
 	if (line.len < 2){
-		/* TODO: Error message */
+		report_error("at least 1 argument must be given");
 		return out;
 	}
 
@@ -80,18 +89,16 @@ static struct instr_t parse_instr(struct fline_t line)
 		out.arg = parse_set_args(line);
 		break;
 	case CODE_VIN:
-		met_vin = 1;
-		out.arg = parse_power_config(line, is_vin_pin);
+		out.arg = parse_vin_args(line);
 		break;
 	case CODE_GND:
-		met_gnd = 1;
-		out.arg = parse_power_config(line, is_gnd_pin);
+		out.arg = parse_gnd_args(line);
 		break;
 	case CODE_DELAY:
 		out.arg = parse_delay_args(line);
 		break;
 	case CODE_INVALID:
-		/* TODO: Error message */
+		report_error("invalid instruction '%s'", line.words[0]);
 		break;
 	}
 	return out;
@@ -100,15 +107,21 @@ static struct instr_t parse_instr(struct fline_t line)
 static uint16_t parse_check_args(struct fline_t line)
 {
 	int met_pins[NUM_PINS] = {0};
-	uint16_t out = parse_pin_io(line, 0, met_pins);
+	uint16_t out;
+
+	push_location("check");
+	out = parse_pin_io(line, 0, met_pins);
 	/* Check that all pins were given a value */
 	int i;
 	for (i = 0; i < NUM_PINS; i++){
 		if (!met_pins[i]){
-			/* TODO: Error message */
-			return 0;
+			report_error("all pins must be given a value");
+			out = 0;
+			goto exit;
 		}
 	}
+exit:
+	pop_location();
 	return out; 
 }
 
@@ -116,25 +129,52 @@ static uint16_t parse_set_args(struct fline_t line)
 {
 	static uint16_t out = 0;
 	int met_pins[NUM_PINS] = {0};
+	push_location("set");
 	out = parse_pin_io(line, out, met_pins);
+	pop_location();
+	return out;
+}
+
+static uint16_t parse_vin_args(struct fline_t line)
+{
+	uint16_t out;
+	met_vin = 1;
+	push_location("vin");
+	out = parse_power_config(line, is_vin_pin);
+	pop_location();
+	return out;
+}
+
+static uint16_t parse_gnd_args(struct fline_t line)
+{
+	uint16_t out;
+	met_gnd = 1;
+	push_location("gnd");
+	out = parse_power_config(line, is_gnd_pin);
+	pop_location();
 	return out;
 }
 
 static uint16_t parse_delay_args(struct fline_t line)
 {
 	long int out = 0;
+	push_location("delay");
 	if (line.len > 2){
-		/* TODO: Error message */
-		return 0;
+		report_error("only 1 argument may be given");
+		out = 0;
+		goto exit;
 	}
 	out = arg_to_num(line.words[1]);
 	if (out == -1){
-		/* TODO: Error message */
-		return 0;
+		report_error("argument must be a number");
+		out = 0;
 	} else if (out < DELAY_MIN || out > DELAY_MAX){
-		/* TODO: Error message */
-		return 0;
+		report_error("argument must be between %i and %i", 
+			DELAY_MIN, DELAY_MAX);
+		out = 0;
 	}
+exit:
+	pop_location();
 	return out;
 }
 
@@ -154,7 +194,9 @@ static uint16_t parse_pin_io(struct fline_t line, uint16_t pins, int *met_pins)
 		} else {
 			pin = arg_to_num(line.words[i]) - 1;
 			if (pin == -1 || !is_pin(pin)){
-				/* TODO: Error message */
+				report_error("argument must be either %s, %s, %s or a pin number (%i - %i)",
+					KW_ON, KW_OFF, KW_REST, PIN_MIN + 1, 
+					PIN_MAX + 1);
 				return 0;
 			}
 			set_single_pin(&out, pin, crnt_mod, met_pins);
@@ -172,7 +214,7 @@ static uint16_t parse_power_config(struct fline_t line, int (*pred)(int pin))
 	for (i = 1; i < line.len; i++){
 		pin = arg_to_num(line.words[i]) - 1;
 		if (pin == -1 || !pred(pin)){
-			/* TODO: Error message */
+			report_error("arguments must be a valid pin number");
 			return 0;
 		}
 		set_single_pin(&out, pin, 1, met_pins);
@@ -194,9 +236,9 @@ static int set_single_pin(uint16_t *pins, int pin, int val, int *met_pins)
 {
 	if (met_pins[pin]){
 		return -1;
-		/* TODO: Error message */
+		report_error("pins may only be given a value once");
 	} else if (val == -1){
-		/* TODO: Error message */
+		report_error("a value must be given before any pin numbers");
 		return -1;
 	} else {
 		met_pins[pin] = 1;
