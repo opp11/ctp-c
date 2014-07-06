@@ -31,6 +31,13 @@ int push_location(const char *loc);
 int pop_location();
 
 /*
+ * Clears the location stack. This is used if an error (preferebly a fatal
+ * error) about to be reported should not have any location info printed
+ * with it.
+ */
+void clear_location();
+
+/*
  * Report an error with the code being parsed / compiled, which voilates the
  * rules of the protocol-language, and therefore should result in no output
  * file. The provided error message will be preceded by the current location.

@@ -16,7 +16,8 @@ int push_location(const char* loc)
 {
 	struct location_t *new_loc = malloc(sizeof(struct location_t));
 	if (!new_loc){
-		return -1;
+		clear_location();
+		report_fatal("not enough unused RAM");
 	}
 	new_loc->loc = loc;
 	new_loc->next = NULL;
@@ -51,17 +52,25 @@ int pop_location()
 	return 0;
 }
 
+void clear_location()
+{
+	while (end_loc){
+		pop_location();
+	}
+}
+
 int report_error(const char* fmt, ...)
 {
 	va_list ap;
 
 	met_error = 1;
 	if (!end_loc){
-		return -1;
+		clear_location();
+		report_fatal("attempting to report an error with no location specified");
 	}
 
 	print_location();
-	fprintf(stderr, " error: ");
+	fprintf(stderr, "error: ");
 	va_start(ap, fmt);
 	vfprintf(stderr, fmt, ap);
 	fprintf(stderr, "\n");
@@ -75,7 +84,8 @@ int report_warning(const char* fmt, ...)
 	va_list ap;
 
 	if (!end_loc){
-		return -1;
+		clear_location();
+		report_fatal("attempting to report a warning with no location specified");
 	}
 
 	fprintf(stderr, "warning: ");
@@ -92,14 +102,16 @@ void report_fatal(const char *fmt, ...)
 {	
 	va_list ap;
 
+	/* A fatal error should always be possible to report */
+	/* therefore we do not abort on no location. */
 	if (end_loc){
-		fprintf(stderr, "error: ");
 		print_location();
-		va_start(ap, fmt);
-		vfprintf(stderr, fmt, ap);
-		fprintf(stderr, "\n");
-		va_end(ap);
 	}
+	fprintf(stderr, "fatal error: ");
+	va_start(ap, fmt);
+	vfprintf(stderr, fmt, ap);
+	fprintf(stderr, "\n");
+	va_end(ap);
 
 	exit(EXIT_FAILURE);
 }
@@ -110,4 +122,5 @@ static void print_location()
 	for (crnt = root_loc; crnt; crnt = crnt->next){
 		fprintf(stderr, "%s:", crnt->loc);
 	}
+	fprintf(stderr, " ");
 }
