@@ -8,6 +8,9 @@
 int main(int argc, char **argv)
 {
 	size_t len;
+	if (argc < 2){
+		report_fatal("no input file given");
+	}
 	push_location(argv[1]);
 	struct fline_t *lines = read_file(argv[1], &len);
 	struct instr_t *ints = parse_file(lines, &len);
