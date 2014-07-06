@@ -15,5 +15,5 @@ int main(int argc, char **argv)
 		build_file("a.prt", ints, len);
 	}
 	pop_location();
-	return 0;
+	exit(EXIT_SUCCESS);
 }
