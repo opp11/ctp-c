@@ -20,7 +20,7 @@ struct fline_t *read_file(char *fname, size_t *len)
 	size_t line_len = 0;
 	FILE *file = fopen(fname, "r");
 	if (!file){
-		report_fatal("could not open file '%s'", fname);
+		report_fatal("could not open file");
 	}
 
 	while (getline(&line, &line_len, file) != -1){
