@@ -37,10 +37,14 @@ int push_location(const char* loc)
 int pop_location()
 {
 	struct location_t *prev_end = end_loc;
-	end_loc = end_loc->prev;
 	if (!end_loc){
+		/* Emtpy stack so do nothing */
+		return 0;
+	} else if (!(end_loc->prev)){
 		root_loc = NULL;
+		end_loc = NULL;
 	} else {
+		end_loc = end_loc->prev;
 		end_loc->next = NULL;
 	}
 	free(prev_end);
