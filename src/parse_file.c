@@ -29,6 +29,8 @@ static int set_single_pin(uint16_t *pins, int pin, int val, int *met_pins);
 /* Returns 'arg' converted to pin number, or -1 on failure to do so. */
 static int arg_to_num(const char* arg);
 
+static size_t count_actual_lines(struct fline_t *lines, size_t len);
+
 static inline int is_vin_pin(int pin)
 {
 	return (pin == 15 || pin == 14);
@@ -47,28 +49,29 @@ static int met_gnd;
 
 struct instr_t *parse_file(struct fline_t *lines, size_t *len)
 {
-	size_t out_len = (*len) + 2;
-	struct instr_t *out = malloc(sizeof(struct instr_t) * out_len);
+	struct instr_t *out = malloc(sizeof(struct instr_t) *
+		count_actual_lines(lines, *len));
+	size_t out_len = 0;
 	unsigned int i;
 	char crnt_line[MAX_LINE_DIGITS]; /* Should be enough digits... */
 
 	met_vin = 0;
 	met_gnd = 0;
-	out[0] = HEADER_INSTR;
 
-	for (i = 1; i < out_len - 1; i++){
-		if (snprintf(crnt_line, MAX_LINE_DIGITS, "%i", i) >= 
+	for (i = 0; i < (*len); i++){
+		if (lines[i].len == 0){
+			continue;
+		}
+		if (snprintf(crnt_line, MAX_LINE_DIGITS, "%i", i + 1) >=
 				MAX_LINE_DIGITS){
 			report_fatal("too many lines");
 		}
 		push_location(crnt_line);
-		out[i] = parse_instr(lines[i - 1]);
+		out[out_len] = parse_instr(lines[i]);
+		out_len++;
 		pop_location();
 	}
-	out[out_len - 1] = END_INSTR;
-	if (len){
-		(*len) = out_len;
-	}
+	(*len) = out_len;
 	return out;
 }
 
@@ -257,6 +260,18 @@ static int arg_to_num(const char *arg)
 	int out = strtol(arg, &endptr, 10);
 	if ((*arg) == '\0' || (*endptr) != '\0'){
 		out = -1;
+	}
+	return out;
+}
+
+static size_t count_actual_lines(struct fline_t *lines, size_t len)
+{
+	size_t i;
+	size_t out = 0;
+	for (i = 0; i < len; i++){
+		if (lines[i].len != 0){
+			out++;
+		}
 	}
 	return out;
 }

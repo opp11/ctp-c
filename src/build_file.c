@@ -10,9 +10,11 @@ void build_file(const char *fname, struct instr_t *ints, size_t len)
 		report_fatal("could not create file '%s'", fname);
 	}
 
+	write_instruction(HEADER_INSTR, file);
 	for (i = 0; i < len; i++){
 		write_instruction(ints[i], file);
 	}
+	write_instruction(END_INSTR, file);
 
 	fclose(file);
 }

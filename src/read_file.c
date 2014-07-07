@@ -24,11 +24,14 @@ struct fline_t *read_file(char *fname, size_t *len)
 	}
 
 	while (getline(&line, &line_len, file) != -1){
+		out_len++;
+		out = realloc(out, sizeof(struct fline_t) * out_len);
 		if (is_code_line(line)){
-			out_len++;
 			str_to_lower(line);
-			out = realloc(out, sizeof(struct fline_t) * out_len);
 			out[out_len - 1] = split_line(line);
+		} else {
+			out[out_len - 1].len = 0;
+			out[out_len - 1].words = NULL;
 		}
 	}
 	free(line);
