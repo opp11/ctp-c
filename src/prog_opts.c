@@ -23,7 +23,7 @@ static const struct option long_opts[] = {
 	{ .name=0, .has_arg=0, .flag=NULL, .val=0}
 };
 
-int process_options(int argc, char **argv)
+void process_options(int argc, char **argv)
 {
 	int opt;
 	int i;
@@ -50,5 +50,4 @@ int process_options(int argc, char **argv)
 				argv[optind - 1]);
 		}
 	}
-	return 0;
 }

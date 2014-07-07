@@ -8,6 +8,6 @@
 extern char *opt_outfile;
 extern int opt_no_output;
 
-int process_options(int argc, char **argv);
+void process_options(int argc, char **argv);
 
 #endif /* __PROGOPTS_H__ */
