@@ -62,12 +62,9 @@ void report_error(const char* fmt, ...)
 	va_list ap;
 
 	met_error = 1;
-	if (!end_loc){
-		clear_location();
-		report_fatal("attempting to report an error with no location specified");
+	if (end_loc){
+		print_location();
 	}
-
-	print_location();
 	fprintf(stderr, "error: ");
 	va_start(ap, fmt);
 	vfprintf(stderr, fmt, ap);
@@ -79,12 +76,9 @@ void report_warning(const char* fmt, ...)
 {
 	va_list ap;
 
-	if (!end_loc){
-		clear_location();
-		report_fatal("attempting to report a warning with no location specified");
+	if (end_loc){
+		print_location();
 	}
-
-	print_location();
 	fprintf(stderr, "warning: ");
 	va_start(ap, fmt);
 	vfprintf(stderr, fmt, ap);
@@ -96,8 +90,6 @@ void report_fatal(const char *fmt, ...)
 {	
 	va_list ap;
 
-	/* A fatal error should always be possible to report */
-	/* therefore we do not abort on no location. */
 	if (end_loc){
 		print_location();
 	}
