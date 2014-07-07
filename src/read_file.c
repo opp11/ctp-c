@@ -38,6 +38,19 @@ struct fline_t *read_file(FILE *stream, size_t *len)
 	return out;
 }
 
+void free_flines(struct fline_t *lines, size_t len)
+{
+	size_t li;
+	int wi;
+	for (li = 0; li < len; li++){
+		for (wi = 0; wi < lines[li].len; wi++){
+			free(lines[li].words[wi]);
+		}
+		free(lines[li].words);
+	}
+	free(lines);
+}
+
 static struct fline_t split_line(char *line)
 {
 	struct fline_t out = {0, NULL};

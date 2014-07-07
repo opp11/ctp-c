@@ -37,4 +37,13 @@ struct fline_t {
  */
 struct fline_t *read_file(FILE *stream, size_t *len);
 
+/*
+ * Deallocates an array of fline_t structs. Should be called on the return
+ * value of 'read_file'
+ *
+ * params:
+ *	lines - The array to deallocate.
+ */
+void free_flines(struct fline_t *lines, size_t len);
+
 #endif /* __READFILE_H__ */
