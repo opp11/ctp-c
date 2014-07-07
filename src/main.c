@@ -10,19 +10,27 @@
 int main(int argc, char **argv)
 {
 	size_t len;
-	FILE *stream = NULL;
+	struct fline_t *lines;
+	struct instr_t *ints;
+	FILE *stream;
+
 	process_options(argc, argv);
-	if (optind >= argc){
-		report_fatal("no input file given");
+	if (opt_read_stdin){
+		push_location("stdin");
+		lines = read_file(stdin, &len);
+	} else {
+		if (optind >= argc){
+			report_fatal("no input file given");
+		}
+		push_location(argv[optind]);
+		stream = fopen(argv[optind], "r");
+		if (!stream){
+			report_fatal("could not open file");
+		}
+		lines = read_file(stream, &len);
+		fclose(stream);
 	}
-	push_location(argv[optind]);
-	stream = fopen(argv[optind], "r");
-	if (!stream){
-		report_fatal("could not open file");
-	}
-	struct fline_t *lines = read_file(stream, &len);
-	fclose(stream);
-	struct instr_t *ints = parse_file(lines, &len);
+	ints = parse_file(lines, &len);
 	if (!met_error && !opt_no_output){
 		build_file(opt_outfile, ints, len);
 	}

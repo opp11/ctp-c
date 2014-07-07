@@ -9,6 +9,8 @@
 extern char *opt_outfile;
 /* Specifies if an output file should be created. 0 if yes, 1 if no. */
 extern int opt_no_output;
+/* Specifies if code should be read from stdin. 1 if yes, 0 if no */
+extern int opt_read_stdin;
 
 /*
  * Process all the commandline options and stores them in their relevant
