@@ -32,9 +32,8 @@ struct fline_t {
  *	        of items in the returned array.
  *
  * returns:
- *	struct fline_t* - On succes: Array of fline_t structs containing the 
+ *	struct fline_t* - Array of fline_t structs containing the 
  *	                  code lines the read file.
- *	                  On failure: NULL.
  */
 struct fline_t *read_file(char *fname, size_t *len);
 

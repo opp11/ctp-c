@@ -8,8 +8,6 @@
 /*
  * Builds a binary file with the name 'fname' containing the provided 
  * instructions. NOTE: if the file already exists it will be overwritten.
- * Furthermore the provided instructions must also contain the file header
- * and end code.
  *
  * params:
  * 	fname - The name of the file to build.
