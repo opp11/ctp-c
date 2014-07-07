@@ -84,8 +84,8 @@ void report_warning(const char* fmt, ...)
 		report_fatal("attempting to report a warning with no location specified");
 	}
 
-	fprintf(stderr, "warning: ");
 	print_location();
+	fprintf(stderr, "warning: ");
 	va_start(ap, fmt);
 	vfprintf(stderr, fmt, ap);
 	fprintf(stderr, "\n");
