@@ -27,14 +27,14 @@ struct fline_t {
  * freed by the user program.
  *
  * params:
- *	fname - Path to the file to be read.
- *	len   - If the function was succesfull, this will contain the number 
- *	        of items in the returned array.
+ *	stream - File / stream to be read.
+ *	len    - If the function was succesfull, this will contain the number 
+ *	         of items in the returned array.
  *
  * returns:
  *	struct fline_t* - Array of fline_t structs containing the 
  *	                  code lines the read file.
  */
-struct fline_t *read_file(char *fname, size_t *len);
+struct fline_t *read_file(FILE *stream, size_t *len);
 
 #endif /* __READFILE_H__ */

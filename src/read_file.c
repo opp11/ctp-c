@@ -12,18 +12,14 @@ static int is_code_line(char *line);
 /* Convert a null-terminated string to lowercase */
 static void str_to_lower(char* str);
 
-struct fline_t *read_file(char *fname, size_t *len)
+struct fline_t *read_file(FILE *stream, size_t *len)
 {
 	struct fline_t *out = NULL;
 	size_t out_len = 0;
 	char *line = NULL;
 	size_t line_len = 0;
-	FILE *file = fopen(fname, "r");
-	if (!file){
-		report_fatal("could not open file");
-	}
 
-	while (getline(&line, &line_len, file) != -1){
+	while (getline(&line, &line_len, stream) != -1){
 		out_len++;
 		out = realloc(out, sizeof(struct fline_t) * out_len);
 		if (is_code_line(line)){
@@ -39,7 +35,6 @@ struct fline_t *read_file(char *fname, size_t *len)
 	if (len){
 		(*len) = out_len;
 	}
-	fclose(file);
 	return out;
 }
 
