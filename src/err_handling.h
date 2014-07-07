@@ -17,7 +17,7 @@
  *	int - On succes: 0
  *	      On failure: -1
  */
-int push_location(const char *loc);
+void push_location(const char *loc);
 
 /*
  * Pop the top location off the location stack, so it will no longer be 
@@ -28,7 +28,7 @@ int push_location(const char *loc);
  *	int - On suces: 0
  *	      On failure: -1
  */
-int pop_location();
+void pop_location();
 
 /*
  * Clears the location stack. This is used if an error (preferebly a fatal
@@ -50,7 +50,7 @@ void clear_location();
  *	int - On succes: 0
  *	      On failure: -1
  */
-int report_error(const char *fmt, ...);
+void report_error(const char *fmt, ...);
 
 /*
  * Report a warning which is something that is not an error, but probably not
@@ -65,7 +65,7 @@ int report_error(const char *fmt, ...);
  *	int - On succes: 0
  *	      On failure: -1
  */
-int report_warning(const char *fmt, ...);
+void report_warning(const char *fmt, ...);
 
 /*
  * Report an error which means that the program cannot continue to run (such

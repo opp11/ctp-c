@@ -12,7 +12,7 @@ int met_error = 0;
 
 static void print_location();
 
-int push_location(const char* loc)
+void push_location(const char* loc)
 {
 	struct location_t *new_loc = malloc(sizeof(struct location_t));
 	if (!new_loc){
@@ -32,15 +32,14 @@ int push_location(const char* loc)
 		new_loc->prev = end_loc;
 		end_loc = new_loc;
 	}
-	return 0;
 }
 
-int pop_location()
+void pop_location()
 {
 	struct location_t *prev_end = end_loc;
 	if (!end_loc){
 		/* Emtpy stack so do nothing */
-		return 0;
+		return;
 	} else if (!(end_loc->prev)){
 		root_loc = NULL;
 		end_loc = NULL;
@@ -49,7 +48,6 @@ int pop_location()
 		end_loc->next = NULL;
 	}
 	free(prev_end);
-	return 0;
 }
 
 void clear_location()
@@ -59,7 +57,7 @@ void clear_location()
 	}
 }
 
-int report_error(const char* fmt, ...)
+void report_error(const char* fmt, ...)
 {
 	va_list ap;
 
@@ -75,11 +73,9 @@ int report_error(const char* fmt, ...)
 	vfprintf(stderr, fmt, ap);
 	fprintf(stderr, "\n");
 	va_end(ap);
-
-	return 0;
 }
 
-int report_warning(const char* fmt, ...)
+void report_warning(const char* fmt, ...)
 {
 	va_list ap;
 
@@ -94,8 +90,6 @@ int report_warning(const char* fmt, ...)
 	vfprintf(stderr, fmt, ap);
 	fprintf(stderr, "\n");
 	va_end(ap);
-
-	return 0;
 }
 
 void report_fatal(const char *fmt, ...)
