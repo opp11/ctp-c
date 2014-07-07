@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "instr.h"
 #include "err_handling.h"
+#include "prog_opts.h"
 
 /*
  * Builds a binary file with the name 'fname' containing the provided 

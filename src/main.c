@@ -18,11 +18,17 @@ int main(int argc, char **argv)
 	if (opt_read_stdin){
 		push_location("stdin");
 		lines = read_file(stdin, &len);
+		if (optind < argc){
+			report_warning("ignoring all input files");
+		}
 	} else {
 		if (optind >= argc){
 			report_fatal("no input file given");
 		}
 		push_location(argv[optind]);
+		if (optind != argc - 1){
+			report_warning("ignoring all other files");
+		}
 		stream = fopen(argv[optind], "r");
 		if (!stream){
 			report_fatal("could not open file");

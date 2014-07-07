@@ -10,6 +10,10 @@ void build_file(const char *fname, struct instr_t *ints, size_t len)
 		report_fatal("could not create file '%s'", fname);
 	}
 
+	if (len == 0 && !opt_no_output){
+		report_warning("no code - creating empty file");
+	}
+
 	write_instruction(HEADER_INSTR, file);
 	for (i = 0; i < len; i++){
 		write_instruction(ints[i], file);
