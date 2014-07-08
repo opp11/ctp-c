@@ -14,7 +14,7 @@ to the component tester's SD card.\n\
          [INFILE | -r | --read]\n\
 \n\
   -h --help                 show this and then exit - overrides -q or --quiet\n\
-  -o FILE --outfile=FILE    specify output file [default: ./out.prt]\n\
+  -o FILE --outfile=FILE    specify output file [default: ./a.prt]\n\
   -r --read                 read code directly from stdin\n\
   -t --test                 do compilation but make no output file\n\
   -q --quiet                do not write anything to the console\
