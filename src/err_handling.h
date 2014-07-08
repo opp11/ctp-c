@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include "prog_opts.h"
 
 /*
  * Push a location on the location stack so it will be printed on a call to

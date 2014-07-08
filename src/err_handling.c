@@ -62,43 +62,48 @@ void report_error(const char* fmt, ...)
 	va_list ap;
 
 	met_error = 1;
-	if (end_loc){
-		print_location();
+	if (opt_console_output){
+		if (end_loc){
+			print_location();
+		}
+		fprintf(stderr, "error: ");
+		va_start(ap, fmt);
+		vfprintf(stderr, fmt, ap);
+		fprintf(stderr, "\n");
+		va_end(ap);
 	}
-	fprintf(stderr, "error: ");
-	va_start(ap, fmt);
-	vfprintf(stderr, fmt, ap);
-	fprintf(stderr, "\n");
-	va_end(ap);
 }
 
 void report_warning(const char* fmt, ...)
 {
 	va_list ap;
 
-	if (end_loc){
-		print_location();
+	if (opt_console_output){
+		if (end_loc){
+			print_location();
+		}
+		fprintf(stderr, "warning: ");
+		va_start(ap, fmt);
+		vfprintf(stderr, fmt, ap);
+		fprintf(stderr, "\n");
+		va_end(ap);
 	}
-	fprintf(stderr, "warning: ");
-	va_start(ap, fmt);
-	vfprintf(stderr, fmt, ap);
-	fprintf(stderr, "\n");
-	va_end(ap);
 }
 
 void report_fatal(const char *fmt, ...)
 {	
 	va_list ap;
 
-	if (end_loc){
-		print_location();
+	if (opt_console_output){
+		if (end_loc){
+			print_location();
+		}
+		fprintf(stderr, "fatal error: ");
+		va_start(ap, fmt);
+		vfprintf(stderr, fmt, ap);
+		fprintf(stderr, "\n");
+		va_end(ap);
 	}
-	fprintf(stderr, "fatal error: ");
-	va_start(ap, fmt);
-	vfprintf(stderr, fmt, ap);
-	fprintf(stderr, "\n");
-	va_end(ap);
-
 	exit(EXIT_FAILURE);
 }
 

@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 	len = lines_len;
 	ints = parse_file(lines, &len);
 	free_flines(lines, lines_len);
-	if (!met_error && !opt_no_output){
+	if (!met_error && !opt_no_outfile){
 		build_file(opt_outfile, ints, len);
 	}
 	free(ints);

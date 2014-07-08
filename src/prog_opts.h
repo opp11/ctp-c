@@ -8,9 +8,11 @@
 /* Contains the name of the output file. Is './out.prt' as default. */
 extern char *opt_outfile;
 /* Specifies if an output file should be created. 0 if yes, 1 if no. */
-extern int opt_no_output;
+extern int opt_no_outfile;
 /* Specifies if code should be read from stdin. 1 if yes, 0 if no */
 extern int opt_read_stdin;
+/* Specifies if anythin may be written to the console. 1 if yes, 0 if no */
+extern int opt_console_output;
 
 /*
  * Process all the commandline options and stores them in their relevant

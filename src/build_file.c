@@ -10,7 +10,7 @@ void build_file(const char *fname, struct instr_t *ints, size_t len)
 		report_fatal("could not create file '%s'", fname);
 	}
 
-	if (len == 0 && !opt_no_output){
+	if (len == 0){
 		report_warning("no code - creating empty file");
 	}
 
