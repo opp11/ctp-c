@@ -11,6 +11,10 @@ LC_FLAGS=-I$(SRC_DIR) -Wall -Wextra
 SRCS=$(wildcard $(SRC_DIR)/*.c)
 OBJS=$(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:.c=.o)))
 
+VALG=valgrind
+
+.PHONY: all $(OUTNAME) clean memtest
+
 all: $(OUTNAME)
 
 $(OUTNAME): $(OBJS)
@@ -19,8 +23,9 @@ $(OUTNAME): $(OBJS)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CC_FLAGS) -o $@ $<
 
-clean: objclean
+clean: 
 	rm -rf $(OUT_DIR)/$(OUTNAME)
-
-objclean:
 	rm -rf $(wildcard $(OBJ_DIR)/*.o)
+
+memtest:
+	$(VALG) --leak-check=full $(OUT_DIR)/$(OUTNAME) ./doc/test1 -q
