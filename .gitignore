@@ -1,2 +1,4 @@
 bin/**
 a.prt
+__pycache__
+*.pyc
