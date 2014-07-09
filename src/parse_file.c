@@ -27,17 +27,17 @@ static int handle_rest(uint16_t *pins, int val, int *met_pins);
 static int set_single_pin(uint16_t *pins, int pin, int val, int *met_pins);
 
 /* Returns 'arg' converted to pin number, or -1 on failure to do so. */
-static int arg_to_num(const char* arg);
+static int arg_to_num(const char* arg, int *success);
 
 static size_t count_actual_lines(struct fline_t *lines, size_t len);
 
 static inline int is_vin_pin(int pin)
 {
-	return (pin == 15 || pin == 14);
+	return (pin == 15 || pin == 14 || pin == 13 || pin == 4);
 }
 static inline int is_gnd_pin(int pin)
 {
-	return (pin == 7);
+	return (pin == 7 || pin == 11);
 }
 static inline int is_pin(int pin)
 {
@@ -78,10 +78,6 @@ struct instr_t *parse_file(struct fline_t *lines, size_t *len)
 static struct instr_t parse_instr(struct fline_t line)
 {
 	struct instr_t out = {0, 0};
-	if (line.len < 2){
-		report_error("at least 1 argument must be given");
-		return out;
-	}
 
 	out.code = instr_name_to_code(line.words[0]);
 	switch (out.code){
@@ -160,15 +156,16 @@ static uint16_t parse_gnd_args(struct fline_t line)
 
 static uint16_t parse_delay_args(struct fline_t line)
 {
+	int was_num;
 	long int out = 0;
 	push_location("delay");
-	if (line.len > 2){
-		report_error("only 1 argument may be given");
+	if (line.len != 2){
+		report_error("exactly 1 argument must be given");
 		out = 0;
 		goto exit;
 	}
-	out = arg_to_num(line.words[1]);
-	if (out == -1){
+	out = arg_to_num(line.words[1], &was_num);
+	if (!was_num){
 		report_error("argument must be a number");
 		out = 0;
 	} else if (out < DELAY_MIN || out > DELAY_MAX){
@@ -186,7 +183,12 @@ static uint16_t parse_pin_io(struct fline_t line, uint16_t pins, int *met_pins)
 	uint16_t out = pins;
 	int i;
 	int pin;
+	int was_num;
 	int crnt_mod = -1;
+	if (line.len < 3){
+		report_error("at least 2 arguments must be given");
+		return 0;
+	}
 	for (i = 1; i < line.len; i++){
 		if (!strcmp(line.words[i], KW_ON)){
 			crnt_mod = 1;
@@ -195,8 +197,8 @@ static uint16_t parse_pin_io(struct fline_t line, uint16_t pins, int *met_pins)
 		} else if (!strcmp(line.words[i], KW_REST)){
 			handle_rest(&out, crnt_mod, met_pins);
 		} else {
-			pin = arg_to_num(line.words[i]) - 1;
-			if (pin == -1 || !is_pin(pin)){
+			pin = arg_to_num(line.words[i], &was_num) - 1;
+			if (!was_num || !is_pin(pin)){
 				report_error("argument must be either %s, %s, %s or a pin number (%i - %i)",
 					KW_ON, KW_OFF, KW_REST, PIN_MIN + 1, 
 					PIN_MAX + 1);
@@ -213,11 +215,19 @@ static uint16_t parse_power_config(struct fline_t line, int (*pred)(int pin))
 	uint16_t out = 0;
 	int i;
 	int pin;
+	int was_num;
 	int met_pins[NUM_PINS] = {0};
+	if (line.len < 2){
+		report_error("at least 1 argument must be given");
+	}
 	for (i = 1; i < line.len; i++){
-		pin = arg_to_num(line.words[i]) - 1;
-		if (pin == -1 || !pred(pin)){
-			report_error("arguments must be a valid pin number");
+		pin = arg_to_num(line.words[i], &was_num) - 1;
+		if (!was_num){
+			report_error("argument must be a number");
+			return 0;
+		} else if (!pred(pin)){
+			report_error("the number '%s' is not a valid pin number",
+				line.words[i]);
 			return 0;
 		}
 		set_single_pin(&out, pin, 1, met_pins);
@@ -238,8 +248,8 @@ static int handle_rest(uint16_t *pins, int val, int *met_pins){
 static int set_single_pin(uint16_t *pins, int pin, int val, int *met_pins)
 {
 	if (met_pins[pin]){
-		return -1;
 		report_error("pins may only be given a value once");
+		return -1;
 	} else if (val == -1){
 		report_error("a value must be given before any pin numbers");
 		return -1;
@@ -254,12 +264,19 @@ static int set_single_pin(uint16_t *pins, int pin, int val, int *met_pins)
 	}
 }
 
-static int arg_to_num(const char *arg)
+static int arg_to_num(const char *arg, int *success)
 {
 	char *endptr;
 	int out = strtol(arg, &endptr, 10);
 	if ((*arg) == '\0' || (*endptr) != '\0'){
+		if (success){
+			(*success) = 0;
+		}
 		out = -1;
+	} else {
+		if (success){
+			(*success) = 1;
+		}
 	}
 	return out;
 }

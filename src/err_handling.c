@@ -104,6 +104,7 @@ void report_fatal(const char *fmt, ...)
 		fprintf(stderr, "\n");
 		va_end(ap);
 	}
+	clear_location();
 	exit(EXIT_FAILURE);
 }
 
