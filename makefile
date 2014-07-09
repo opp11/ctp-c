@@ -11,9 +11,6 @@ LC_FLAGS=-I$(SRC_DIR) -Wall -Wextra
 SRCS=$(wildcard $(SRC_DIR)/*.c)
 OBJS=$(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:.c=.o)))
 
-VALG=valgrind
-
-.PHONY: all $(OUTNAME) clean memtest
 .PHONY: all $(OUTNAME) clean memtest test
 
 all: $(OUTNAME)
@@ -32,4 +29,7 @@ test:
 	python3 test/ctp_test.py
 
 memtest:
-	$(VALG) --leak-check=full $(OUT_DIR)/$(OUTNAME) ./doc/test1 -q
+	valgrind --leak-check=full --show-reachable=yes $(OUT_DIR)/$(OUTNAME)\
+	 ./test/test1 -q
+	valgrind --leak-check=full --show-reachable=yes $(OUT_DIR)/$(OUTNAME)\
+	 ajndhsy20fwnoc02nsuya0d3h
