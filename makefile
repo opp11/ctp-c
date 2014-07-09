@@ -14,6 +14,7 @@ OBJS=$(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:.c=.o)))
 VALG=valgrind
 
 .PHONY: all $(OUTNAME) clean memtest
+.PHONY: all $(OUTNAME) clean memtest test
 
 all: $(OUTNAME)
 
@@ -26,6 +27,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 clean: 
 	rm -rf $(OUT_DIR)/$(OUTNAME)
 	rm -rf $(wildcard $(OBJ_DIR)/*.o)
+
+test:
+	python3 test/ctp_test.py
 
 memtest:
 	$(VALG) --leak-check=full $(OUT_DIR)/$(OUTNAME) ./doc/test1 -q
