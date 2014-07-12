@@ -63,7 +63,7 @@ class TestCommands(CtpTestCase):
             'check on 16 off rest',
             'check on 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16',
             'check on 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 off rest')
-        self.run_program('test_valid_check')
+        self.run_program('test_valid_check', '-w',)
         with open('a.prt', 'rb') as file:
             self.assertEqual(file.read(),
                 b'PM1'
@@ -87,7 +87,7 @@ class TestCommands(CtpTestCase):
             'check 1 on',
             'check on 1 off 1 rest',
             'check')
-        output = self.run_program('test_error_check', valid_run=False)
+        output = self.run_program('test_error_check', '-w', valid_run=False)
         self.assertListEqual(output, [
             b'test_error_check:1:check: error: argument must be either on, off, rest or a pin number (1 - 16)\n',
             b'test_error_check:1:check: error: all pins must be given a value\n',
@@ -116,7 +116,7 @@ class TestCommands(CtpTestCase):
             'set off rest',
             'set on 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16',
             'set off 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 on rest')
-        self.run_program('test_valid_set')
+        self.run_program('test_valid_set', '-w')
         with open('a.prt', 'rb') as file:
             self.assertEqual(file.read(),
                 b'PM1'
@@ -140,7 +140,7 @@ class TestCommands(CtpTestCase):
             'set 1',
             'set 1 on',
             'set')
-        output = self.run_program('test_error_set', valid_run=False)
+        output = self.run_program('test_error_set', '-w', valid_run=False)
         self.assertListEqual(output, [
             b'test_error_set:1:set: error: argument must be either on, off, rest or a pin number (1 - 16)\n',
             b'test_error_set:2:set: error: at least 2 arguments must be given\n',
@@ -158,7 +158,7 @@ class TestCommands(CtpTestCase):
             'delay 65535', # max delay - all bits on
             'delay 32768', # last bit on
             'delay 100')
-        self.run_program('test_valid_delay')
+        self.run_program('test_valid_delay', '-w')
         with open('a.prt', 'rb') as file:
             self.assertEqual(file.read(),
                 b'PM1'
@@ -178,7 +178,7 @@ class TestCommands(CtpTestCase):
             'delay 100 100',
             'delay habla',
             'delay')
-        output = self.run_program('test_error_delay', valid_run=False)
+        output = self.run_program('test_error_delay', '-w', valid_run=False)
         self.assertListEqual(output, [
             b'test_error_delay:1:delay: error: argument must be between 1 and 65535\n',
             b'test_error_delay:2:delay: error: argument must be between 1 and 65535\n',
@@ -196,7 +196,7 @@ class TestCommands(CtpTestCase):
             'vin 14',
             'vin 5',
             'vin 16 15 14 5')
-        self.run_program('test_valid_vin')
+        self.run_program('test_valid_vin', '-w')
         with open('a.prt', 'rb') as file:
             self.assertEqual(file.read(),
                 b'PM1'
@@ -215,7 +215,7 @@ class TestCommands(CtpTestCase):
             'vin -10',
             'vin -1',
             'vin')
-        output = self.run_program('test_error_vin', valid_run=False)
+        output = self.run_program('test_error_vin', '-w', valid_run=False)
         self.assertListEqual(output, [
             b"test_error_vin:1:vin: error: the number '1' is not a valid pin number\n",
             b"test_error_vin:2:vin: error: the number '1' is not a valid pin number\n",
@@ -229,7 +229,7 @@ class TestCommands(CtpTestCase):
             'gnd 8',
             'gnd 12',
             'gnd 8 12')
-        self.run_program('test_valid_gnd')
+        self.run_program('test_valid_gnd', '-w')
         with open('a.prt', 'rb') as file:
             self.assertEqual(file.read(),
                 b'PM1'
@@ -246,7 +246,7 @@ class TestCommands(CtpTestCase):
             'gnd -10',
             'gnd -1',
             'gnd')
-        output = self.run_program('test_error_gnd', valid_run=False)
+        output = self.run_program('test_error_gnd', '-w', valid_run=False)
         self.assertListEqual(output, [
             b"test_error_gnd:1:gnd: error: the number '1' is not a valid pin number\n",
             b"test_error_gnd:2:gnd: error: the number '1' is not a valid pin number\n",

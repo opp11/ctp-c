@@ -185,6 +185,10 @@ static uint16_t parse_pin_io(struct fline_t line, uint16_t pins, int *met_pins)
 	int pin;
 	int was_num;
 	int crnt_mod = -1;
+
+	if (!met_vin || !met_gnd){
+		report_warning("manipulationg pins without specifying ground and/or vin");
+	}
 	if (line.len < 3){
 		report_error("at least 2 arguments must be given");
 		return 0;
