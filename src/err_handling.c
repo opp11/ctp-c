@@ -78,7 +78,7 @@ void report_warning(const char* fmt, ...)
 {
 	va_list ap;
 
-	if (opt_console_output){
+	if (opt_console_output && !opt_no_warnings){
 		if (end_loc){
 			print_location();
 		}

@@ -4,30 +4,34 @@ char *opt_outfile = "./a.prt";
 int opt_no_outfile = 0;
 int opt_read_stdin = 0;
 int opt_console_output = 1;
+int opt_no_warnings = 0;
 
 static const char *help_msg = "\
 Program for compiling a protocol file to a binary file which can be uploaded\n\
 to the component tester's SD card.\n\
 \n\
-  usage:\n\
-     ctp [-h | --help] [-o FILE | --outfile=FILE] [-t | --test] [-q | --quiet]\n\
-         [INFILE | -r | --read]\n\
+usage:\n\
+   ctp [-h | --help] [-o FILE | --outfile=FILE] [-t | --test] [-q | --quiet]\n\
+         [-w | --no-warnings] [INFILE | -r | --read]\n\
 \n\
+options:\n\
   -h --help                 show this and then exit - overrides -q or --quiet\n\
   -o FILE --outfile=FILE    specify output file [default: ./a.prt]\n\
   -r --read                 read code directly from stdin\n\
   -t --test                 do compilation but make no output file\n\
-  -q --quiet                do not write anything to the console\
+  -q --quiet                do not write anything to the console\n\
+  -w --no-warnings          do not write any warnings to the console\
 ";
 
-static const char *short_opts = ":o:rthq";
+static const char *short_opts = ":o:rthqw";
 static const struct option long_opts[] = {
 	{ .name="outfile", .has_arg=required_argument, .flag=NULL, .val='o' },
 	{ .name="test", .has_arg=no_argument, .flag=NULL, .val='t' },
 	{ .name="read", .has_arg=no_argument, .flag=NULL, .val='r' },
 	{ .name="help", .has_arg=no_argument, .flag=NULL, .val='h' },
 	{ .name="quiet", .has_arg=no_argument, .flag=NULL, .val='q' },
-	{ .name=0, .has_arg=0, .flag=NULL, .val=0}
+	{ .name="no-warnings", .has_arg=no_argument, .flag=NULL, .val='w' },
+	{ .name=0, .has_arg=0, .flag=NULL, .val=0 }
 };
 
 void process_options(int argc, char **argv)
@@ -52,6 +56,9 @@ void process_options(int argc, char **argv)
 			exit(EXIT_SUCCESS);
 		case 'q': /* quiet */
 			opt_console_output = 0;
+			break;
+		case 'w': /* no-warning */
+			opt_no_warnings = 1;
 			break;
 		case '?':
 			clear_location();

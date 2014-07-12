@@ -13,6 +13,8 @@ extern int opt_no_outfile;
 extern int opt_read_stdin;
 /* Specifies if anythin may be written to the console. 1 if yes, 0 if no */
 extern int opt_console_output;
+/* Specifies if no warnings should be printed. 1 if yes, 0 if no */
+extern int opt_no_warnings;
 
 /*
  * Process all the commandline options and stores them in their relevant
