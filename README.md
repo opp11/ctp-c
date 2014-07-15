@@ -3,21 +3,22 @@ ctp
 Program for compiling a protocol file to a binary file which can be uploaded
 to the component tester's SD card.
 
-usage:
-    ctp [-h | --help] [-o FILE | --outfile=FILE] [-t | --test] [-q | --quiet]
-        [-w | --no-warnings] [INFILE | -r | --read]
-
-options:
-    -h --help                 show this and then exit - overrides -q or --quiet
-    -o FILE --outfile=FILE    specify output file [default: ./a.prt]
-    -r --read                 read code directly from stdin
-    -t --test                 do compilation but make no output file
-    -q --quiet                do not write anything to the console
-    -w --no-warnings          do not write any warnings to the console
+    usage:
+        ctp [-h | --help] [-o FILE | --outfile=FILE] [-t | --test] [-q | --quiet]
+            [-w | --no-warnings] [INFILE | -r | --read]
+    
+    options:
+        -h --help                 show this and then exit - overrides -q or --quiet
+        -o FILE --outfile=FILE    specify output file [default: ./a.prt]
+        -r --read                 read code directly from stdin
+        -t --test                 do compilation but make no output file
+        -q --quiet                do not write anything to the console
+        -w --no-warnings          do not write any warnings to the console
 
 HOW TO BUILD
 ==============================================================================
 To build the program navigate to the root directory of the project and call
+
     make
 Which will compile the program and place it in the bin/ directory.
 
@@ -25,6 +26,7 @@ TESTING
 ------------------------------------------------------------------------------
 In order to run the included tests navigate to the root directory of the project
 and call
+
     make test
     make memtest
 to test if the program works as expected.
