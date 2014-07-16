@@ -53,7 +53,7 @@ class TestFileCreation(CtpTestCase):
         self.assertTrue(os.path.isfile(self.orig_dir + '/4081'))
         os.remove(self.orig_dir + '/4081')
 
-class TestCommands(CtpTestCase):
+class TestCheck(CtpTestCase):
 
     def test_valid_check(self):
         self.make_test_file('test_valid_check',
@@ -107,6 +107,8 @@ class TestCommands(CtpTestCase):
             b'test_error_check:9:check: error: all pins must be given a value\n'
         ])
 
+class TestSet(CtpTestCase):
+
     def test_valid_set(self):
         self.make_test_file('test_valid_set',
             'set off rest',
@@ -152,6 +154,8 @@ class TestCommands(CtpTestCase):
             b'test_error_set:8:set: error: at least 2 arguments must be given\n'
         ])
 
+class TestDelay(CtpTestCase):
+
     def test_valid_delay(self):
         self.make_test_file('test_valid_delay',
             'delay 1', # min deelay
@@ -189,6 +193,8 @@ class TestCommands(CtpTestCase):
             b'test_error_delay:7:delay: error: exactly 1 argument must be given\n'
         ])
 
+class TestVin(CtpTestCase):
+
     def test_valid_vin(self):
         self.make_test_file('test_valid_vin',
             'vin 16',
@@ -223,6 +229,8 @@ class TestCommands(CtpTestCase):
             b"test_error_vin:4:vin: error: the number '-1' is not a valid pin number\n",
             b'test_error_vin:5:vin: error: at least 1 argument must be given\n'
         ])
+
+class TestGnd(CtpTestCase):
 
     def test_valid_gnd(self):
         self.make_test_file('test_valid_gnd',
