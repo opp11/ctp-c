@@ -208,7 +208,9 @@ static uint16_t parse_pin_io(struct fline_t line, uint16_t pins, int *met_pins)
 					PIN_MAX + 1);
 				return 0;
 			}
-			set_single_pin(&out, pin, crnt_mod, met_pins);
+			if (set_single_pin(&out, pin, crnt_mod, met_pins)){
+				return 0;
+			}
 		}
 	}
 	return out;

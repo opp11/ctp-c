@@ -56,14 +56,14 @@ class TestFileCreation(CtpTestCase):
 class TestCheck(CtpTestCase):
 
     def test_valid_check(self):
-        self.make_test_file('test_valid_check',
+        self.make_test_file('check_valid',
             'check on 1 off rest',
             'check on 1 2 off rest',
             'check off 1 2 on rest',
             'check on 16 off rest',
             'check on 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16',
             'check on 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 off rest')
-        self.run_program('test_valid_check', '-w',)
+        self.run_program('check_valid', '-w',)
         with open('a.prt', 'rb') as file:
             self.assertEqual(file.read(),
                 b'PM1'
@@ -76,35 +76,59 @@ class TestCheck(CtpTestCase):
                 b'END')
         os.remove('a.prt')
 
-    def test_error_check(self):
-        self.make_test_file('test_error_check',
-            'check on 112',
-            'check habla',
+    def test_invalid_pins(self):
+        self.make_test_file('check_invalid_pins',
             'check on habla',
-            'check on 1',
-            'check 1',
-            'check on',
-            'check 1 on',
-            'check on 1 off 1 rest',
-            'check')
-        output = self.run_program('test_error_check', '-w', valid_run=False)
+            'check on 112',
+            'check on -1',
+            'check on -10',
+            'check on 1 habla')
+        output = self.run_program('check_invalid_pins', '-w', valid_run=False)
         self.assertListEqual(output, [
-            b'test_error_check:1:check: error: argument must be either on, off, rest or a pin number (1 - 16)\n',
-            b'test_error_check:1:check: error: all pins must be given a value\n',
-            b'test_error_check:2:check: error: at least 2 arguments must be given\n',
-            b'test_error_check:2:check: error: all pins must be given a value\n',
-            b'test_error_check:3:check: error: argument must be either on, off, rest or a pin number (1 - 16)\n',
-            b'test_error_check:3:check: error: all pins must be given a value\n',
-            b'test_error_check:4:check: error: all pins must be given a value\n',
-            b'test_error_check:5:check: error: at least 2 arguments must be given\n',
-            b'test_error_check:5:check: error: all pins must be given a value\n',
-            b'test_error_check:6:check: error: at least 2 arguments must be given\n',
-            b'test_error_check:6:check: error: all pins must be given a value\n',
-            b'test_error_check:7:check: error: a value must be given before any pin numbers\n',
-            b'test_error_check:7:check: error: all pins must be given a value\n',
-            b'test_error_check:8:check: error: pins may only be given a value once\n',
-            b'test_error_check:9:check: error: at least 2 arguments must be given\n',
-            b'test_error_check:9:check: error: all pins must be given a value\n'
+            b'check_invalid_pins:1:check: error: argument must be either on, off, rest or a pin number (1 - 16)\n',
+            b'check_invalid_pins:1:check: error: all pins must be given a value\n',
+            b'check_invalid_pins:2:check: error: argument must be either on, off, rest or a pin number (1 - 16)\n',
+            b'check_invalid_pins:2:check: error: all pins must be given a value\n',
+            b'check_invalid_pins:3:check: error: argument must be either on, off, rest or a pin number (1 - 16)\n',
+            b'check_invalid_pins:3:check: error: all pins must be given a value\n',
+            b'check_invalid_pins:4:check: error: argument must be either on, off, rest or a pin number (1 - 16)\n',
+            b'check_invalid_pins:4:check: error: all pins must be given a value\n',
+            b'check_invalid_pins:5:check: error: argument must be either on, off, rest or a pin number (1 - 16)\n',
+            b'check_invalid_pins:5:check: error: all pins must be given a value\n'
+        ])
+
+    def test_invalid_keywords(self):
+        self.make_test_file('check_invalid_keywords',
+            'check habla 1',
+            'check 1 1',
+            'check 1 on')
+        output = self.run_program('check_invalid_keywords', '-w', 
+            valid_run=False)
+        self.assertListEqual(output, [
+            b'check_invalid_keywords:1:check: error: argument must be either on, off, rest or a pin number (1 - 16)\n',
+            b'check_invalid_keywords:1:check: error: all pins must be given a value\n',
+            b'check_invalid_keywords:2:check: error: a value must be given before any pin numbers\n',
+            b'check_invalid_keywords:2:check: error: all pins must be given a value\n',
+            b'check_invalid_keywords:3:check: error: a value must be given before any pin numbers\n',
+            b'check_invalid_keywords:3:check: error: all pins must be given a value\n'
+        ])
+
+    def test_arg_count(self):
+        self.make_test_file('check_arg_count',
+            'check habla',
+            'check on',
+            'check 1',
+            'check')
+        output = self.run_program('check_arg_count', '-w', valid_run=False)
+        self.assertListEqual(output, [
+            b'check_arg_count:1:check: error: at least 2 arguments must be given\n',
+            b'check_arg_count:1:check: error: all pins must be given a value\n',
+            b'check_arg_count:2:check: error: at least 2 arguments must be given\n',
+            b'check_arg_count:2:check: error: all pins must be given a value\n',
+            b'check_arg_count:3:check: error: at least 2 arguments must be given\n',
+            b'check_arg_count:3:check: error: all pins must be given a value\n',
+            b'check_arg_count:4:check: error: at least 2 arguments must be given\n',
+            b'check_arg_count:4:check: error: all pins must be given a value\n'
         ])
 
 class TestSet(CtpTestCase):
